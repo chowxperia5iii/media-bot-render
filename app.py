@@ -10,19 +10,19 @@ fmt = st.selectbox("選擇格式", ["MP4 (影片)", "MP3 (音訊)"])
 
 if st.button("🚀 開始處理"):
     if url:
-        with st.spinner("雲端轉碼中... 請稍候"):
-            # 在執行時更新 yt-dlp 以確保能抓取最新影片
+        with st.spinner("雲端轉碼中... (使用 Cookies 授權中)"):
+            # 確保環境有最新 yt-dlp
             subprocess.run("pip install -U yt-dlp", shell=True)
             
             output_tpl = "download.%(ext)s"
+            # 增加 --cookies cookies.txt 參數來規避機器人檢測
             if "MP4" in fmt:
-                cmd = f'yt-dlp -f "best" --merge-output-format mp4 -o "{output_tpl}" "{url}"'
+                cmd = f'yt-dlp --cookies cookies.txt -f "best" --merge-output-format mp4 -o "{output_tpl}" "{url}"'
                 target = "download.mp4"
             else:
-                cmd = f'yt-dlp -x --audio-format mp3 -o "{output_tpl}" "{url}"'
+                cmd = f'yt-dlp --cookies cookies.txt -x --audio-format mp3 -o "{output_tpl}" "{url}"'
                 target = "download.mp3"
             
-            # 執行下載
             res = subprocess.run(cmd, shell=True, capture_output=True, text=True)
             
             if os.path.exists(target):
